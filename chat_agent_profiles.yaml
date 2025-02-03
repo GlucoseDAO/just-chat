@@ -3,10 +3,13 @@ agent_profiles:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent # For web agents, always use this class name.
     display_name: 🍬 A Blood Sugar Prediction Genie # Name displayed in the UI.
     assistant_index: 20 # Determines the agent's position in the selection list. The first agent is set as the default.
+    tools: # List of tools available to this agent. These will be automatically imported.
+      - package: "tools.document_reader" # Corresponds to tools/toy_tools.py.
+        function: "about_glucosedao" # Function available within the tool.
     llm_options: # Configuration options for the language model.
       # tools: []  # Do not set tools here! They should be configured separately.
-      api_base: https://api.groq.com/openai/v1 # API endpoint URL.
-      model: groq/llama-3.3-70b-versatile # Specifies the model provider and name.
+      api_base: https://api.openai.com/v1 # API endpoint URL.
+      model: gpt-4o-mini # Specifies the model provider and name.
       temperature: 0.0 # Controls response randomness (0.0 = deterministic).
       tool_choice: auto # Automatically selects tools when applicable.
     examples: # Sample user queries for reference.
@@ -14,7 +17,9 @@ agent_profiles:
         title: Glucose Level Prediction
 
     system_prompt: | # System prompt defining the AI's role and behavior.
-       You are a Glucose Level Prediction Advisor.
+      You are a Glucose Level Prediction Advisor.
+      You have access to specialized tools, including:
+      - `about_glucosedao`: A tool that provides information about GlucoseDAO.
 
   web_agent_example:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
@@ -42,6 +47,8 @@ agent_profiles:
         function: "generate_random_matrix" # Function available within the tool.
       - package: "agent_tools.toy_tools"
         function: "summarize_dataframe"
+      - package: "tools.document_reader" # Corresponds to tools/toy_tools.py.
+        function: "about_glucosedao" # Function available within the tool.
     llm_options:
       api_base: https://api.groq.com/openai/v1
       model: groq/llama-3.3-70b-versatile
@@ -59,6 +66,7 @@ agent_profiles:
       You have access to specialized tools, including:
       - `generate_random_matrix`: A high-entropy matrix generator.
       - `summarize_dataframe`: A function for summarizing structured tabular data.
+      - `about_glucosedao`: A tool that provides information about GlucoseDAO.
 
       When a user requests matrix or dataframe operations, you must always utilize these tools. Format the results in two ways:
       1. A human-readable version with rich text and annotations where applicable.

@@ -1,0 +1,164 @@
+GlucoseDAO is an innovative decentralized science project focused on glucose prediction and health optimization,
+combining technology with community-driven healthcare solutions.
+
+Project Overview
+Core Mission
+The project aims to develop an open-source glucose prediction system while building a collaborative community
+focused on health and longevity. The initiative addresses a significant market, with 6.7% of the global population 
+being diabetic and approximately one-third interested in health awareness and lifestyle improvement.
+
+Technical Development
+-Created an open-source glucose prediction repository using an open-source transformer model
+-Launched a microstudy collecting CGM and movement data(still in progress)
+-Developing a human prediction benchmark game (since there is no golden standard for glucose prediction)
+-Maintaining public Huggingface models and datasets
+
+Achievements and Recognition
+-Secured aprox $2,000 funding from DesciFunding GG21 (here is the link for the pitch "https://glucosedao.github.io/")
+-Presented research at ARDD 2024 as a figure in a poster
+-Conducted presentations at Zelar and HEALES longevity meetings
+
+Market Analysis
+Current Market Status
+-Proprietary CGM apps average 2.5-star ratings
+-Third-party apps with better user data access achieve 4.5-star ratings
+-Existing solutions primarily focus on direct value readings without predictive capabilities
+
+Leadership Structure
+Core Team
+-Founder: Zaharia Livia (Type 1 diabetic)
+-Founding Members: Anton Kulaga, Brandon Houten
+Scientific Advisory Board
+-Irina Gaianova (University of Michigan, Biostatistics)
+-Prof. Georg Fullen (Rostock University)
+-Renat Sergazinov (GlucoBench author)
+
+Future Development
+The project is actively seeking additional funding and community participation to expand its scope and capabilities.
+The decentralized approach aims to accelerate discovery in health optimization through community-driven funding and open-access platforms.
+
+
+
+
+
+
+How does GlucoseDao plan to improve glucose prediction accuracy?
+GlucoseDAO's approach to improving glucose prediction accuracy involves a combination of 
+data collection and benchmarking strategies:
+
+Data Collection Approach (resulting in a larger and more diverse dataset)
+-microstudy that combines Continuous Glucose Monitoring (CGM) data with movement data to build comprehensive prediction models.
+-users can contribute their data to the dataset
+-researchers can use the dataset to train their models or to test new models/theories
+
+Benchmarking Strategy
+-The project is developing a unique benchmarking method through a game where users predict glucose value changes 
+-for the next hour. This human prediction rate will serve as a baseline to validate their model's effectiveness.
+
+Technical Implementation
+-Created an open-source project available on GitHub
+-Focuses on data integration capabilities for users
+-Maintains open datasets for collaborative improvement
+
+This approach is scientifically sound, as research has shown that for 30-minute prediction horizons, well-designed models 
+can achieve 95.8-99.7% clinically acceptable predictions1. The inclusion of additional physiological data, particularly 
+during physical activity, has been proven to significantly improve prediction accuracy. (see "https://pmc.ncbi.nlm.nih.gov/articles/PMC6610614/")
+
+
+
+
+
+What specific technologies will GlucoseDao use to enhance glucose prediction accuracy?
+-Multi-Source Data Integration
+-Continuous Glucose Monitoring (CGM) as the primary data source
+-Smartwatch sensor data including heart rate and step detection1
+-Accelerometry data for physical activity tracking
+-Machine Learning Architecture
+
+Performance Metrics
+This technical approach could achieve:
+-15-minute predictions with RMSE of 0.19mmol/L and 99% clinical safety
+-60-minute predictions with RMSE of 0.59mmol/L and 98% clinical safety
+(see "https://pmc.ncbi.nlm.nih.gov/articles/PMC8224858/")
+
+-Improved accuracy by removing reliance on manual activity logging
+(see "https://pmc.ncbi.nlm.nih.gov/articles/PMC11257318/")
+
+Real-time Processing
+The system would implement:
+-Edge computing for real-time model inference
+-Continuous data collection and processing from wearable devices
+-Automated activity monitoring to replace manual documentation
+
+
+
+
+
+What are the main goals of the GlucoseDao community?
+GlucoseDAO has three primary goals focused on democratizing glucose data and prediction:
+
+Data Collection and Sharing
+-Establish a decentralized open database of blood glucose values from CGM devices
+-Collect volunteer-contributed data including health and lifestyle variables
+-Address the current limitation of existing datasets which only include dozens of people monitored for short periods
+
+Technical Development
+-Train and fine-tune models to predict blood glucose trends
+-Contribute models and datasets to the GlucoBench benchmark
+-Create user-friendly implementations of prediction models for everyday use
+
+Community Governance
+-Establish a Decentralized Autonomous Organization (DAO) to govern data collection and development
+-Develop protocols for sharing glucose data
+-Implement smart contracts to reward participants when their data is used in commercial applications
+
+The project aims to benefit both people with medical conditions and health-conscious individuals interested in optimizing their longevity through better glucose 
+management
+
+
+
+
+
+
+How does the GlucoseDao project benefit from being open source?
+
+Community Engagement
+-Increased visibility in the developer community leads to more potential contributors and users
+-Bug fixes and improvements can come from anyone with the skills and motivation
+-Community members can suggest new features and participate in development decisions
+
+Technical Advantages
+-Larger pool of testers helps identify and fix issues more quickly
+-Enhanced security through code transparency and community oversight
+-Potential for community-driven bug fixes and patches that wouldn't be available in closed-source projects
+
+Trust and Sustainability
+-Promotes transparency in data collection and research collaboration
+-Provides business continuity assurance for users and stakeholders
+-Allows for fair profit-sharing through smart contracts when data is used commercially
+
+Research Impact
+-Facilitates collaborative research while maintaining contributor privacy
+-Enables contribution to broader scientific benchmarks like GlucoBench
+-Supports the democratization of valuable health data and insights
+
++
+
+
+How does GlucoseDao ensure the portability of their predictive models across different individuals?
+
+Data Standardization
+-Implement data normalization across different CGM devices and measurement units
+-Create standardized formats for auxiliary data like movement and lifestyle factors
+-Use semantic web resources and ontologies to maintain consistent data interpretation
+
+Model Architecture
+-Develop transfer learning approaches to adapt base models to individual characteristics
+-Include personalization layers that can be fine-tuned for each user
+-Create a hierarchical structure that captures both population-level and individual patterns
+
+Validation Framework
+-Set specific thresholds for acceptable accuracy loss during model transfer
+-Evaluate model performance across diverse user groups
+-Test models across different glucose monitoring devices and conditions
+ 
