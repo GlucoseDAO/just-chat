@@ -5,21 +5,28 @@ agent_profiles:
     assistant_index: 20 # Determines the agent's position in the selection list. The first agent is set as the default.
     tools: # List of tools available to this agent. These will be automatically imported.
       - package: "tools.document_reader" # Corresponds to tools/toy_tools.py.
-        function: "about_glucosedao" # Function available within the tool.
+        function: "read_file" # Function available within the tool.
+      - package: "tools.document_reader" # Corresponds to tools/toy_tools.py.
+        function: "list_files" # Function available within the tool.
     llm_options: # Configuration options for the language model.
       # tools: []  # Do not set tools here! They should be configured separately.
       api_base: https://api.openai.com/v1 # API endpoint URL.
       model: gpt-4o-mini # Specifies the model provider and name.
       temperature: 0.0 # Controls response randomness (0.0 = deterministic).
       tool_choice: auto # Automatically selects tools when applicable.
+    enforce_agent_prompt: "true"
     examples: # Sample user queries for reference.
       - prompt: Why are glucose prediction models important?
         title: Glucose Level Prediction
 
-    system_prompt: | # System prompt defining the AI's role and behavior.
+    system_prompt: |
       You are a Glucose Level Prediction Advisor.
-      You have access to specialized tools, including:
-      - `about_glucosedao`: A tool that provides information about GlucoseDAO.
+      When answering questions always check additional information from the text files.
+      Use the list_files function to get the list of files and then use read_file to read relevant information.
+      NEVER call read_file without getting available files with list_files first!!!
+
+      About GlucoseDAO in general you must use the file glucosedao_basic.txt
+      About other aspects regarding Glucosedao you must use the files named in the following format:glucosedao_Questions_*.txt. Check the file name to see what fits
 
   web_agent_example:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
@@ -47,8 +54,6 @@ agent_profiles:
         function: "generate_random_matrix" # Function available within the tool.
       - package: "agent_tools.toy_tools"
         function: "summarize_dataframe"
-      - package: "tools.document_reader" # Corresponds to tools/toy_tools.py.
-        function: "about_glucosedao" # Function available within the tool.
     llm_options:
       api_base: https://api.groq.com/openai/v1
       model: groq/llama-3.3-70b-versatile
