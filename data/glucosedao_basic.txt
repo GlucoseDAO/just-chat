@@ -14,26 +14,7 @@ Technical Development
 -Maintaining public Huggingface models and datasets
 
 Achievements and Recognition
--Secured aprox $2,000 funding from DesciFunding GG21 (here is the link for the pitch "https://glucosedao.github.io/")
+-Secured aprox $2,000 funding from DesciFunding GG21
 -Presented research at ARDD 2024 as a figure in a poster
 -Conducted presentations at Zelar and HEALES longevity meetings
-
-Market Analysis
-Current Market Status
--Proprietary CGM apps average 2.5-star ratings
--Third-party apps with better user data access achieve 4.5-star ratings
--Existing solutions primarily focus on direct value readings without predictive capabilities
-
-Leadership Structure
-Core Team
--Founder: Zaharia Livia (Type 1 diabetic)
--Founding Members: Anton Kulaga, Brandon Houten
-Scientific Advisory Board
--Irina Gaianova (University of Michigan, Biostatistics)
--Prof. Georg Fullen (Rostock University)
--Renat Sergazinov (GlucoBench author)
-
-Future Development
-The project is actively seeking additional funding and community participation to expand its scope and capabilities.
-The decentralized approach aims to accelerate discovery in health optimization through community-driven funding and open-access platforms.
 

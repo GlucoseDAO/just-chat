@@ -18,7 +18,7 @@ Technical Implementation
 
 This approach is scientifically sound, as research has shown that for 30-minute prediction horizons, well-designed models 
 can achieve 95.8-99.7% clinically acceptable predictions1. The inclusion of additional physiological data, particularly 
-during physical activity, has been proven to significantly improve prediction accuracy. (see "https://pmc.ncbi.nlm.nih.gov/articles/PMC6610614/")
+during physical activity, has been proven to significantly improve prediction accuracy. (see 2.1 from glucosedao_online_links_for_reference.txt)
 
 What specific technologies will GlucoseDao use to enhance glucose prediction accuracy?
 -Multi-Source Data Integration
@@ -31,10 +31,10 @@ Performance Metrics
 This technical approach could achieve:
 -15-minute predictions with RMSE of 0.19mmol/L and 99% clinical safety
 -60-minute predictions with RMSE of 0.59mmol/L and 98% clinical safety
-(see "https://pmc.ncbi.nlm.nih.gov/articles/PMC8224858/")
+(see 2.2 from glucosedao_online_links_for_reference.txt)
 
 -Improved accuracy by removing reliance on manual activity logging
-(see "https://pmc.ncbi.nlm.nih.gov/articles/PMC11257318/")
+(see 2.3 from glucosedao_online_links_for_reference.txt)
 
 Real-time Processing
 The system would implement:
