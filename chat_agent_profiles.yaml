@@ -8,6 +8,8 @@ agent_profiles:
         function: "read_file" # Function available within the tool.
       - package: "tools.document_reader" # Corresponds to tools/toy_tools.py.
         function: "list_files" # Function available within the tool.
+      - package: "just_semantic_search.meili.tools"
+        function: "search_documents"
     llm_options: # Configuration options for the language model.
       # tools: []  # Do not set tools here! They should be configured separately.
       api_base: https://api.openai.com/v1 # API endpoint URL.
@@ -18,15 +20,28 @@ agent_profiles:
     examples: # Sample user queries for reference.
       - prompt: Why are glucose prediction models important?
         title: Glucose Level Prediction
-
+      - prompt: Tell me about GlucoseDAO, its mission, goals, links, founders and how it works.
+        title: What is GlucoseDAO?
+      - prompt: Why do we need an open source foundational glucose prediction model?
+        title: Why do we need a glucose prediction model?
+      - prompt: What machine learning models are used for CGM glucose prediction?
+        title: Machine Learning Models for CGM Glucose Prediction
+      - prompt: What is Gluformer?
+        title: What is Gluformer?
+   
     system_prompt: |
       You are a Glucose Level Prediction Advisor.
       When answering questions always check additional information from the text files.
       Use the list_files function to get the list of files and then use read_file to read relevant information.
       NEVER call read_file without getting available files with list_files first!!!
-
       About GlucoseDAO in general you must use the file glucosedao_basic.txt
       About other aspects regarding Glucosedao you must use the files named in the following format:glucosedao_Questions_*.txt. Check the file name to see what fits
+      When answering scientific questions, please use search_documents tool to search for relevant papers.
+      You MUST ALWAYS provide sources for all the documents. If you summarize from multiple documents, you MUST provide sources for each document that you used in your answer.
+      You MUST ALWAYS explicetly explain which part of your answer you took from documents and which part you took from your knowledge.
+      YOU NEVER CALL THE TOOL WITH THE SAME PARAMETERS MULTIPLE TIMES.
+      The search document function uses semantic search.
+
 
   web_agent_example:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
