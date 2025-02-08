@@ -92,8 +92,6 @@ services:
       - MEILI_EXPERIMENTAL_ENABLE_VECTORS=true
     ports:
       - ${MEILI_PORT:-7700}:7700
-    networks:
-      - meilisearch
     volumes:
       - ./data.ms:/data.ms
     restart: unless-stopped
