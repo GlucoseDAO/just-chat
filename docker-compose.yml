@@ -96,6 +96,9 @@ services:
       - ./data.ms:/data.ms
     restart: unless-stopped
 
+volumes:
+  mongo-data:
+
 networks:
   default:
     name: chat-server-for-agents
