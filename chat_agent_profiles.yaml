@@ -4,11 +4,18 @@ agent_profiles:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent # For web agents, always use this class name.
     display_name: 🍬 A Blood Sugar Prediction Genie -ORIGINAL # Name displayed in the UI.
     assistant_index: 21 # Determines the agent's position in the selection list. The first agent is set as the default.
-    tools: # List of tools available to this agent. These will be automatically imported.
-      - package: "agent_tools.data_tools" # Corresponds to tools/toy_tools.py.
-        function: "read_file" # Function available within the tool.
-      - package: "agent_tools.data_tools" # Corresponds to tools/toy_tools.py.
-        function: "list_files" # Function available within the tool.
+    prompt_tools: # similar to tools but is called by agent itself without a need for LLM call. Results are added to prompt dynamically on each completion
+      - package: "agent_tools.data_tools"
+        function: "list_files"
+        call_arguments:
+          show_all: False # we only want text
+          subdir: "glucose_txt"
+          as_json: True
+    tools:
+    #  - package: "agent_tools.data_tools"
+    #    function: "list_files"
+      - package: "agent_tools.data_tools"
+        function: "read_file"
     llm_options:
     #  api_base: https://api.groq.com/openai/v1
       model: groq/openai/gpt-oss-20b
@@ -16,6 +23,7 @@ agent_profiles:
       model: "gemini/gemini-2.0-flash"
     raise_on_completion_status_errors: False #report API errors into chat
     enforce_agent_prompt: "true"
+    raise_on_completion_status_errors: "false" #report API errors into chat
     examples: # Sample user queries for reference.
       - prompt: Why are glucose prediction models important?
         title: Glucose Level Prediction
