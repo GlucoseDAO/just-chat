@@ -1,2 +1,3 @@
 numpy>=2.2
 pandas>=2.2
+just_agents
