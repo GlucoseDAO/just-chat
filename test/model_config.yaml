@@ -6,6 +6,13 @@ agent_profiles:
       model: gemini/gemini-2.0-flash
       temperature: 0.0
     system_prompt: You are a helpful assistant powered by Gemini. Answer the question concisely and accurately.
+  
+  learnLM_agent:
+    display_name: LearnLM Agent
+    llm_options:
+      model: gemini/learnlm-1.5-pro-experimental
+      temperature: 0.0
+    system_prompt: You are a helpful assistant powered by Gemini. Answer the question concisely and accurately.
 
   groq_agent:
     display_name: Groq Agent
@@ -15,6 +22,13 @@ agent_profiles:
       api_key: ${GROQ_API_KEY}  # Will be read from environment variable
       temperature: 0.0
     system_prompt: You are a helpful assistant powered by Llama 3. Answer the question concisely and accurately.
+
+  deepseek_agent:
+    display_name: DeepSeek Agent
+    llm_options:
+      model: deepseek/deepseek-reasoner
+      temperature: 0.0
+    system_prompt: You are a helpful assistant powered by Gemini. Answer the question concisely and accurately.
 
   openai_agent:
     display_name: OpenAI Agent
@@ -28,8 +42,7 @@ agent_profiles:
   custom_agent:
     display_name: Custom API Agent
     llm_options:
-      model: sugar_genie_original
+      model: sugar_genie_assistant
       api_base: http://just-chat-ui-agents:8089
-      api_type: openai
       custom_llm_provider: custom
     system_prompt: You are a helpful assistant that can answer questions about Glucosedao and its founders.

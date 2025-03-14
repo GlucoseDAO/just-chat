@@ -3,3 +3,16 @@ Why are glucose prediction models important?
 What machine learning models are used for CGM glucose prediction?
 What is the mission of GlucoseDAO?
 What are the future plans for GlucoseDAO?
+what is GlucoseDao?
+how does CGM monitoring help people and for what is it useful?
+what is the purpouse of low glucose variability?
+what are the negative effects of not keeping yout glucose in check?
+what actions can you take to have a good blood glucose?
+indirect advantages of glucose monitoring
+list recent studies to prove the advantages of glucose monitoring
+what methods of predicting glucose variation are there
+why is glucose prediction needed?
+is there a proper diet or regime to follow for glucose stability?
+is there a preffered approach to glucose prediction?
+what is available for glucose monitoring at the moment on the open market?
+how long will it take for a proper solution to be found?- are there any start ups that take on this challange?
