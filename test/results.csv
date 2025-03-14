@@ -1,0 +1,78 @@
+question,model,agent_name,response,time_taken
+What is GlucoseDAO and who are the founders?,gemini/gemini-2.0-flash,gemini_agent,"GlucoseDAO is a decentralized autonomous organization (DAO) focused on funding research and development into treatments for metabolic diseases, particularly diabetes.
+
+The founders of GlucoseDAO are **James Fickel, Patrick Joyce, and Tony Zheng.**
+",0.9019100666046143
+Why are glucose prediction models important?,gemini/gemini-2.0-flash,gemini_agent,"Glucose prediction models are important because they can help people with diabetes:
+
+*   **Proactively manage their blood sugar levels:** By forecasting future glucose levels, individuals can take preventative measures like adjusting insulin dosages, meal plans, or exercise routines to avoid hyperglycemia (high blood sugar) or hypoglycemia (low blood sugar).
+*   **Improve glycemic control:** Better management leads to improved HbA1c levels, reducing the risk of long-term complications associated with diabetes.
+*   **Personalize diabetes management:** Models can be tailored to individual needs and responses, leading to more effective and personalized treatment plans.
+*   **Enhance the use of artificial pancreas systems:** Accurate predictions are crucial for the safe and effective operation of automated insulin delivery systems.
+*   **Reduce the burden of diabetes management:** By providing insights and alerts, these models can ease the mental and emotional load of constantly monitoring and reacting to blood sugar fluctuations.
+",1.708216905593872
+What machine learning models are used for CGM glucose prediction?,gemini/gemini-2.0-flash,gemini_agent,"A variety of machine learning models are used for CGM glucose prediction, each with its strengths and weaknesses. Here are some of the most common:
+
+*   **Recurrent Neural Networks (RNNs), especially LSTMs and GRUs:** These are very popular due to their ability to handle sequential data like CGM readings and capture temporal dependencies. LSTMs (Long Short-Term Memory) and GRUs (Gated Recurrent Units) are variants designed to address the vanishing gradient problem in standard RNNs, allowing them to learn long-range dependencies.
+
+*   **Convolutional Neural Networks (CNNs):** While traditionally used for image processing, CNNs can also be applied to time series data by treating segments of CGM data as ""images."" They are good at identifying patterns and features in the data.
+
+*   **Support Vector Machines (SVMs):** SVMs are effective for both classification and regression tasks. In glucose prediction, they can be used to predict whether glucose levels will fall within a certain range or to predict the specific glucose value.
+
+*   **Regression Models (Linear Regression, Polynomial Regression):** Simpler regression models can be used as a baseline or when computational resources are limited. They may not capture complex relationships as well as neural networks.
+
+*   **Ensemble Methods (Random Forests, Gradient Boosting Machines):** These methods combine multiple decision trees to improve prediction accuracy and robustness. They are often competitive with neural networks and can be easier to train.
+
+*   **Hybrid Models:** Some approaches combine different types of models to leverage their individual strengths. For example, a hybrid model might use a CNN to extract features from CGM data and then feed those features into an LSTM for prediction.
+
+*   **Transformer Networks:** Originally developed for natural language processing, transformers are increasingly being used for time series forecasting, including glucose prediction. They can capture long-range dependencies and handle complex patterns in the data.
+
+The choice of model depends on factors such as the amount of available data, the complexity of the relationships between glucose levels and other variables, and the computational resources available.
+",3.020514965057373
+What is the mission of GlucoseDAO?,gemini/gemini-2.0-flash,gemini_agent,"The mission of GlucoseDAO is to **accelerate the development of cures and treatments for metabolic diseases, particularly diabetes, through community-driven funding and research.**
+",0.8217129707336426
+What are the future plans for GlucoseDAO?,gemini/gemini-2.0-flash,gemini_agent,"While specific future plans can evolve, GlucoseDAO has generally outlined the following directions:
+
+*   **Funding Research:** Continue to identify and fund promising research projects focused on diabetes and metabolic diseases. This includes exploring novel therapies, preventative measures, and improved management strategies.
+*   **Building a Community:** Expand and strengthen the community of researchers, patients, and investors involved in the DAO. This involves fostering collaboration and knowledge sharing.
+*   **Decentralized Data Sharing:** Develop platforms and protocols for secure and privacy-preserving data sharing to facilitate research. This could involve using blockchain technology to manage and incentivize data contributions.
+*   **Tokenomics and Governance:** Refine the DAO's tokenomics and governance mechanisms to ensure fair and efficient decision-making. This includes exploring new ways to incentivize participation and reward contributions.
+*   **Real-World Impact:** Translate research findings into tangible benefits for patients, such as new treatments, diagnostic tools, or lifestyle interventions.
+*   **Partnerships:** Collaborate with other organizations, including academic institutions, pharmaceutical companies, and patient advocacy groups, to amplify the impact of the DAO's work.
+*   **Expanding Scope:** Potentially broaden the focus to include other metabolic diseases beyond diabetes, such as obesity and non-alcoholic fatty liver disease (NAFLD).
+",2.045548915863037
+What is GlucoseDAO and who are the founders?,groq/llama-3.3-70b-versatile,groq_agent,GlucoseDAO is a decentralized autonomous organization (DAO) focused on diabetes research and management. The founders of GlucoseDAO are Sam Taggart and Jeff Ji.,0.8203277587890625
+Why are glucose prediction models important?,groq/llama-3.3-70b-versatile,groq_agent,"Glucose prediction models are important because they help individuals with diabetes anticipate and manage their blood glucose levels, reducing the risk of hypoglycemia (low blood sugar) and hyperglycemia (high blood sugar). These models can also improve insulin dosing, diet planning, and overall diabetes management, leading to better health outcomes and quality of life.",0.7415318489074707
+What machine learning models are used for CGM glucose prediction?,groq/llama-3.3-70b-versatile,groq_agent,"Common machine learning models used for Continuous Glucose Monitoring (CGM) glucose prediction include:
+
+1. Autoregressive Integrated Moving Average (ARIMA)
+2. Recurrent Neural Networks (RNNs)
+3. Long Short-Term Memory (LSTM) networks
+4. Convolutional Neural Networks (CNNs)
+5. Gradient Boosting
+6. Prophet
+
+These models can be used individually or in combination to predict future glucose levels based on historical CGM data, insulin dosing, meal information, and other relevant factors.",0.8575527667999268
+What is the mission of GlucoseDAO?,groq/llama-3.3-70b-versatile,groq_agent,"The mission of GlucoseDAO is to create an open-source, community-driven platform for predicting blood glucose levels, with the goal of improving diabetes management and outcomes for individuals with diabetes. GlucoseDAO aims to achieve this by:
+
+1. Collecting and anonymizing large amounts of glucose data
+2. Developing and refining predictive models using machine learning and artificial intelligence
+3. Providing open-source tools and resources for the diabetes community
+4. Fostering collaboration and knowledge-sharing among researchers, clinicians, and individuals with diabetes.
+
+By doing so, GlucoseDAO seeks to accelerate innovation and progress in diabetes management, and to make high-quality glucose prediction models accessible to everyone.",0.9336223602294922
+What are the future plans for GlucoseDAO?,groq/llama-3.3-70b-versatile,groq_agent,"The future plans for GlucoseDAO include:
+
+1. **Data collection and annotation**: Expanding the dataset of anonymized glucose data to improve model accuracy and generalizability.
+2. **Model development and refinement**: Continuously updating and refining the predictive models to achieve higher accuracy and adapt to individual variability.
+3. **Open-source platform development**: Creating a user-friendly, open-source platform for individuals with diabetes to access and utilize the predictive models.
+4. **Community engagement and education**: Building a community around GlucoseDAO to promote knowledge-sharing, education, and collaboration among individuals with diabetes, researchers, and clinicians.
+5. **Integration with wearable devices and health systems**: Integrating GlucoseDAO's predictive models with popular wearable devices and health systems to enable seamless data exchange and improved diabetes management.
+6. **Clinical validation and regulatory approval**: Pursuing clinical validation and regulatory approval to establish GlucoseDAO's predictive models as a reliable tool for diabetes management.
+
+By achieving these goals, GlucoseDAO aims to become a leading platform for glucose prediction and diabetes management, improving the lives of individuals with diabetes worldwide.",1.4327459335327148
+What is GlucoseDAO and who are the founders?,sugar_genie_original,custom_agent,"ERROR: litellm.APIConnectionError: CustomException - {""detail"":""Method Not Allowed""}",0.06054377555847168
+Why are glucose prediction models important?,sugar_genie_original,custom_agent,"ERROR: litellm.APIConnectionError: CustomException - {""detail"":""Method Not Allowed""}",0.03718304634094238
+What machine learning models are used for CGM glucose prediction?,sugar_genie_original,custom_agent,"ERROR: litellm.APIConnectionError: CustomException - {""detail"":""Method Not Allowed""}",0.03405141830444336
+What is the mission of GlucoseDAO?,sugar_genie_original,custom_agent,"ERROR: litellm.APIConnectionError: CustomException - {""detail"":""Method Not Allowed""}",0.03153800964355469
+What are the future plans for GlucoseDAO?,sugar_genie_original,custom_agent,"ERROR: litellm.APIConnectionError: CustomException - {""detail"":""Method Not Allowed""}",0.02691793441772461
