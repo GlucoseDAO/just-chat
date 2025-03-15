@@ -1,3 +1,4 @@
 numpy>=2.2
 pandas>=2.2
 just_agents
+typer>=0.9.0

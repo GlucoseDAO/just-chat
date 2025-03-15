@@ -19,7 +19,6 @@ agent_profiles:
     llm_options:
       model: groq/llama-3.3-70b-versatile
       api_base: https://api.groq.com/openai/v1
-      api_key: ${GROQ_API_KEY}  # Will be read from environment variable
       temperature: 0.0
     system_prompt: You are a helpful assistant powered by Llama 3. Answer the question concisely and accurately.
 
@@ -30,12 +29,18 @@ agent_profiles:
       temperature: 0.0
     system_prompt: You are a helpful assistant powered by Gemini. Answer the question concisely and accurately.
 
+  deepseek_distilled_agent:
+    display_name: DeepSeek distilled Agent
+    llm_options:
+      model: groq/deepseek-r1-distill-llama-70b
+      temperature: 0.0
+    system_prompt: You are a helpful assistant powered by Gemini. Answer the question concisely and accurately.
+
   openai_agent:
     display_name: OpenAI Agent
     llm_options:
       model: gpt-4o
       api_base: https://api.openai.com/v1
-      api_key: ${OPENAI_API_KEY}  # Will be read from environment variable
       temperature: 0.0
     system_prompt: You are a helpful assistant powered by GPT-4o. Answer the question concisely and accurately.
 

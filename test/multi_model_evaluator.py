@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 import yaml
 import pandas as pd
-import argparse
+import typer
 import os
 import time
 import re
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from just_agents.base_agent import BaseAgent
 import litellm
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Configure LiteLLM to handle custom endpoints correctly
 litellm.api_url_paths = {
@@ -87,20 +88,6 @@ class MultiModelEvaluator:
             # Strip whitespace and filter out empty lines
             return [line.strip() for line in f.readlines() if line.strip()]
     
-    def _create_agent(self, agent_config: Dict[str, Any]) -> BaseAgent:
-        """Create an agent based on configuration"""
-        # Extract LLM options from the agent configuration
-        llm_options = agent_config.get("llm_options", {})
-        
-        # Print the LLM options for debugging
-        print(f"LLM options: {llm_options}")
-        
-        # Get system prompt
-        system_prompt = agent_config.get("system_prompt", "You are a helpful assistant.")
-        
-        # Create and return the agent
-        return BaseAgent(llm_options=llm_options, system_prompt=system_prompt)
-    
     def run_evaluation(self):
         """Run the evaluation across all models and questions"""
         # Get the list of agent profiles to evaluate
@@ -123,7 +110,56 @@ class MultiModelEvaluator:
                 
             # Create the agent
             try:
-                agent = self._create_agent(agent_config)
+                # Try to create the agent using from_yaml
+                try:
+                    # First, try to load directly from the original config file
+                    agent = BaseAgent.from_yaml(
+                        section_name=agent_name,
+                        parent_section="agent_profiles",
+                        file_path=Path(self.config_path)
+                    )
+                    print(f"Loaded agent {agent_name} from original config file")
+                except (KeyError, FileNotFoundError):
+                    # If not found in original config, create a temporary file
+                    temp_config = {
+                        "agent_profiles": {
+                            agent_name: agent_config
+                        }
+                    }
+                    
+                    temp_config_path = Path(f"temp_{agent_name}_config.yaml")
+                    with open(temp_config_path, 'w') as f:
+                        yaml.dump(temp_config, f)
+                    
+                    try:
+                        # Create the agent using from_yaml
+                        agent = BaseAgent.from_yaml(
+                            section_name=agent_name,
+                            parent_section="agent_profiles",
+                            file_path=temp_config_path
+                        )
+                        
+                        # Clean up the temporary file
+                        os.remove(temp_config_path)
+                    except Exception as e:
+                        # Clean up the temporary file
+                        if os.path.exists(temp_config_path):
+                            os.remove(temp_config_path)
+                        
+                        print(f"Error creating agent using from_yaml: {str(e)}")
+                        print("Falling back to direct instantiation")
+                        
+                        # Extract LLM options from the agent configuration
+                        llm_options = agent_config.get("llm_options", {})
+                        
+                        # Print the LLM options for debugging
+                        print(f"LLM options: {llm_options}")
+                        
+                        # Get system prompt
+                        system_prompt = agent_config.get("system_prompt", "You are a helpful assistant.")
+                        
+                        # Create and return the agent
+                        agent = BaseAgent(llm_options=llm_options, system_prompt=system_prompt)
                 
                 # Process each question
                 for question in self.questions:
@@ -185,51 +221,62 @@ class MultiModelEvaluator:
     
     def _save_results(self):
         """Save results to CSV file"""
-        self.results.to_csv(self.output_path, index=False)
-        
-        # Also save as Excel if pandas has openpyxl
-        try:
-            excel_path = os.path.splitext(self.output_path)[0] + ".xlsx"
-            self.results.to_excel(excel_path, index=False)
-            print(f"Results also saved to Excel: {excel_path}")
-        except Exception:
-            pass  # Skip Excel export if not available
+        # Restructure the results dataframe to have questions as rows and models as columns
+        if not self.results.empty:
+            # Create a unique identifier for each model/agent combination
+            self.results['model_agent'] = self.results['agent_name'] + ' (' + self.results['model'] + ')'
+            
+            # Create a pivot table with questions as rows and model/agent as columns
+            pivoted_results = self.results.pivot(
+                index='question',
+                columns='model_agent',
+                values='response'
+            )
+            
+            # Reset index to make 'question' a regular column
+            pivoted_results = pivoted_results.reset_index()
+            
+            # Save the pivoted results to CSV
+            pivoted_results.to_csv(self.output_path, index=False)
+            
+            # Also save as Excel if pandas has openpyxl
+            try:
+                excel_path = os.path.splitext(self.output_path)[0] + ".xlsx"
+                pivoted_results.to_excel(excel_path, index=False)
+                print(f"Results also saved to Excel: {excel_path}")
+            except Exception:
+                pass  # Skip Excel export if not available
+            
+        else:
+            # If results are empty, save an empty dataframe
+            pd.DataFrame(columns=["question"]).to_csv(self.output_path, index=False)
 
-def main():
+def main(
+    config: str = typer.Option(..., "--config", help="Path to the YAML configuration file"),
+    questions: str = typer.Option(..., "--questions", help="Path to the text file containing questions"),
+    output: Optional[str] = typer.Option(None, "--output", help="Path to save the results (default: results.csv)"),
+    env: Optional[str] = typer.Option(None, "--env", help="Path to .env file with API keys")
+):
+    """
+    Evaluate multiple LLM models on a set of questions.
+    """
     # Load environment variables first
     load_env_files()
     
-    # Print available API keys (masked for security)
-    for key in ['GROQ_API_KEY', 'GEMINI_API_KEY', 'OPENAI_API_KEY']:
-        if key in os.environ:
-            value = os.environ[key]
-            masked = value[:4] + '*' * (len(value) - 8) + value[-4:] if len(value) > 8 else '****'
-            print(f"Found {key}: {masked}")
-        else:
-            print(f"Missing {key}")
-    
-    # Parse command line arguments
-    parser = argparse.ArgumentParser(description="Evaluate multiple LLM models on a set of questions")
-    parser.add_argument("--config", required=True, help="Path to the YAML configuration file")
-    parser.add_argument("--questions", required=True, help="Path to the text file containing questions")
-    parser.add_argument("--output", help="Path to save the results (default: results.csv)")
-    parser.add_argument("--env", help="Path to .env file with API keys")
-    
-    args = parser.parse_args()
     
     # Load specific env file if provided
-    if args.env and os.path.exists(args.env):
-        print(f"Loading environment variables from {args.env}")
-        load_dotenv(args.env)
+    if env and os.path.exists(env):
+        print(f"Loading environment variables from {env}")
+        load_dotenv(env)
     
     # Create and run the evaluator
     evaluator = MultiModelEvaluator(
-        config_path=args.config,
-        questions_path=args.questions,
-        output_path=args.output
+        config_path=config,
+        questions_path=questions,
+        output_path=output
     )
     
     evaluator.run_evaluation()
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)
