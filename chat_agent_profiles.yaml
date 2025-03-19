@@ -3,15 +3,15 @@ agent_profiles:
   sugar_genie_assistant:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
     display_name: 🍬 A Blood Sugar Prediction Genie -ORIGINAL- includes all the information # Name displayed in the UI.
-    assistant_index: 19
+    assistant_index: 19 
     tools:
       - package: "just_agents.tools.agents_locator"
-        function: "call_fallback_agent"
+        function: "call_expert_agent"
     llm_options:
     #  api_base: https://api.groq.com/openai/v1
       model: groq/openai/gpt-oss-20b
       temperature: 0.0
-
+    
     examples: # Sample user queries for reference.
       - prompt: Why are glucose prediction models important?
         title: Glucose Level Prediction
@@ -37,28 +37,29 @@ agent_profiles:
         title: Glucosedao -goal
       - prompt: What is the vision of Glucosedao?
         title: Glucosedao -vision
-    system_prompt: You are a helpful generic AI assistant.
-      When you're asked abut something you use 'call_fallback_agent' tool to call a dedicated agent.
+    system_prompt: |
+      You are a helpful generic AI assistant.
+      When you're asked about something you use 'call_expert_agent' tool to call a dedicated agent.
       If user asks specific information about GlucoseDAO and only about it, you call an agent named 'sugar_genie_original', and relay user query to it.
-      If you're asked about something else you call 'sugar_genie_generic' agent and relay user query to it.
+      If you're asked about something else you can search the knowledge base and call 'sugar_genie_original'. 
+      If there are no relevant answers in the knowledge base, call 'sugar_genie_generic' agent and relay user query to it.
       Always specify which part came from generic knowledge and which part came from files. If there are files, specify also names.
-
 
 
   sugar_genie_generic:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
-    display_name: 🍬 A Blood Sugar Prediction Genie -uses only generic info-
+    display_name: 🍬 A Blood Sugar Prediction Genie -uses only generic info- 
     hidden: true
-    assistant_index: 20
+    assistant_index: 20 
     llm_options:
-      model: gemini/learnlm-1.5-pro-experimental
+      model: gemini/gemini-2.0-flash
       temperature: 0.0
     examples: # Sample user queries for reference.
       - prompt: Why are glucose prediction models important?
         title: Glucose Level Prediction
-    system_prompt: You are a helpful generic AI assistant.
+    system_prompt: |
+      You are a helpful generic AI assistant.
       Your task is to answer to best of your knowledge questions regarding diabetic issues or any other generic topics.
-
 
 
   sugar_genie_original: # Short agent identifier in snake_case format.
@@ -66,6 +67,12 @@ agent_profiles:
     display_name: 🍬 A Blood Sugar Prediction Genie -ORIGINAL # Name displayed in the UI.
     hidden: true
     assistant_index: 21 # Determines the agent's position in the selection list. The first agent is set as the default.
+    llm_options:
+      model: groq/llama-3.3-70b-versatile
+      temperature: 0.0
+    enforce_agent_prompt: True
+    raise_on_completion_status_errors: False #report API errors into chat
+
     prompt_tools: # similar to tools but is called by agent itself without a need for LLM call. Results are added to prompt dynamically on each completion
       - package: "agent_tools.data_tools"
         function: "list_files"
@@ -75,19 +82,17 @@ agent_profiles:
           subdir: "glucose_txt"
           as_json: True
     tools:
-      - package: "agent_tools.data_tools"
-        function: "read_file"
-    llm_options:
-      temperature: 0.0
-      model: "gemini/gemini-2.0-flash"
-    enforce_agent_prompt: "true"
-    raise_on_completion_status_errors: "false" #report API errors into chat
+    - package: "just_semantic_search.meili.tools"
+      function: "all_indexes"
+    - package: "just_semantic_search.meili.tools"
+      function: "search_documents"
+
     examples: # Sample user queries for reference.
       - prompt: Tell me about GlucoseDAO, its mission, goals, links, founders and how it works.
         title: What is GlucoseDAO?
       - prompt: What is the vision of Glucosedao?
         title: Glucosedao -vision
-
+   
     system_prompt: |
       You are a Glucose Level Prediction Advisor. 
       When answering any question your first step is to search for relevant documents using the tool 'search_documents' with glucosedao as index. Use 5 as limit Always use this index, do not change it.
@@ -150,6 +155,7 @@ agent_profiles:
       Do not attempt to answer the question—only summarize it concisely. 
       Always begin your response with a relevant emoji that reflects the topic of the user's query.
 
+
   rag_agent:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
     display_name: 🕵 RAG Agent
@@ -173,6 +179,7 @@ agent_profiles:
       If you summarize from multiple documents, you MUST provide sources for each document (after each evidence quote, not in the end) that you used in your answer.
       You MUST ALWAYS explicitly explain which part of your answer you took from documents and which part you took from your knowledge.
       YOU NEVER CALL THE TOOL WITH THE SAME PARAMETERS MORE THAN ONCE.
+
 
   annotation_agent:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
