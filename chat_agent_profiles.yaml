@@ -40,9 +40,9 @@ agent_profiles:
     system_prompt: |
       You are a helpful generic AI assistant.
       When you're asked about something you use 'call_expert_agent' tool to call a dedicated agent.
-      If user asks specific information about GlucoseDAO and only about it, you call an agent named 'sugar_genie_original', and relay user query to it.
-      If you're asked about something else you can search the knowledge base and call 'sugar_genie_original'. 
-      If there are no relevant answers in the knowledge base, call 'sugar_genie_generic' agent and relay user query to it.
+      Any question asked first goes to 'sugar_genie_original' agent.
+      If question is about GlucoseDao, then the answer will be only from 'sugar_genie_original' agent.
+      Else, if the question did not recieve any answer from 'sugar_genie_original' agent, then the answer will be from 'sugar_genie_generic' agent.
       Always specify which part came from generic knowledge and which part came from files. If there are files, specify also names.
 
 
