@@ -5,20 +5,26 @@ This branch of the just-chat repo was created to provide a chatbot agent to answ
 
 ## Features
 - Integration with Meilisearch, allowing semantic search of indexed files (regarding GlucoseDAO) and research papers (regarding diabetic and glucose studies)
-- A specialized structure of chat agents used to cover various aspects
+- A specialized structure of chat agents used to cover various aspects of diabetes and glucose prediction
 
 ## Agent Architecture
 This branch uses an approach with three specialized agents:
 
-1. **Assistant Agent (Switch Agent)** - When a user sends a request, it's first received by this agent whose sole purpose is to route the request to the appropriate specialized agent.
+1. **Sugar Genie Assistant** (🍬 A Blood Sugar Prediction Genie) - When a user sends a request, it's first received by this agent whose sole purpose is to route the request to the appropriate specialized agent using the `call_expert_agent` tool.
 
-2. **Expert Agent** - Equipped with semantic search tools to provide domain-specific information:
-   - If a question is specifically about GlucoseDAO, this agent provides information from indexed documents
-   - For other questions, this agent checks if there's relevant information among the indexed papers
+2. **Sugar Genie Original** (🍬 A Blood Sugar Prediction Genie -ORIGINAL) - The expert agent equipped with semantic search tools (`search_documents` and `all_indexes`) :
+   - Specializes in questions about GlucoseDAO by searching the "glucosedao" index
+   - Uses document searches to provide detailed information with proper source attribution
+   - Has access to the "glucose_txt" directory of indexed documents
 
-3. **Generic Agent** - If the Expert Agent doesn't find relevant information, this agent answers from its general knowledge
+3. **Sugar Genie Generic** (🍬 A Blood Sugar Prediction Genie -uses only generic info-) - this agent is used when the expert agent doesn't find relevant information to answer questions about diabetic issues or any other generic topics from its trained knowledge
 
-These three agents ensure that:
+Additional supporting agents include:
+- **Chat Naming Agent** (📜) - Used for generating concise chat titles in the UI
+- **RAG Agent** (🕵) - Handles advanced semantic search operations
+- **Annotation Agent** (📝) - Extracts abstracts, authors, and titles from research papers
+
+The multi-agent system ensures that:
 - All requests are answered with the latest information, supplementing the general knowledge the models were trained on
 - By splitting agents into specialized roles, we can control which models are used at each stage, ensuring appropriate coordination and cost control
 

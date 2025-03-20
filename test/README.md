@@ -16,7 +16,7 @@ Before running the test, ensure you have:
 
 2. Attach to the container:
    - Press `CTRL+SHIFT+P` and select `Dev Containers: Attach to Running Container`
-   - Select the `chat-ui-agents` container
+   - Select the `just-chat-agents` container
 
 3. Install required dependencies:
    ```bash
@@ -25,7 +25,7 @@ Before running the test, ensure you have:
 
 4. Run the test:
    ```bash
-   python test/multi_model_evaluator.py --config test/model_config.yaml --questions test/questions.txt --output test/results.csv
+   python test/multi_model_evaluator.py --config test/model_config.yaml --questions test/questions.txt 
    ```
 
 ## Test Components

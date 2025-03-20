@@ -5,6 +5,7 @@ import typer
 import os
 import time
 import re
+import datetime
 from typing import List, Dict, Any, Optional
 from just_agents.base_agent import BaseAgent
 import litellm
@@ -47,11 +48,27 @@ class MultiModelEvaluator:
         Args:
             config_path: Path to the YAML configuration file
             questions_path: Path to the text file containing questions
-            output_path: Path to save the results (default: results.csv)
+            output_path: Path to save the results (default: test/results_{timestamp}.csv)
         """
         self.config_path = config_path
         self.questions_path = questions_path
-        self.output_path = output_path or "results.csv"
+        
+        # Generate timestamp for use in filenames and data
+        self.timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        
+        # Get the test directory path
+        test_dir = os.path.dirname(os.path.abspath(__file__))
+        
+        # Add timestamp to default output filename if none provided
+        if output_path:
+            # If output_path is not absolute, make it relative to test directory
+            if not os.path.isabs(output_path):
+                self.output_path = os.path.join(test_dir, output_path)
+            else:
+                self.output_path = output_path
+        else:
+            # Default output path in test directory
+            self.output_path = os.path.join(test_dir, f"results_{self.timestamp}.csv")
         
         # Load configuration
         self.config = self._load_config()
@@ -59,8 +76,8 @@ class MultiModelEvaluator:
         # Load questions
         self.questions = self._load_questions()
         
-        # Initialize results dataframe
-        self.results = pd.DataFrame(columns=["question", "model", "agent_name", "response", "time_taken"])
+        # Initialize results dataframe with timestamp column
+        self.results = pd.DataFrame(columns=["question", "model", "agent_name", "response", "time_taken", "timestamp"])
         
     def _load_config(self) -> Dict[str, Any]:
         """Load the YAML configuration file and substitute environment variables"""
@@ -175,7 +192,7 @@ class MultiModelEvaluator:
                         # Calculate time taken
                         time_taken = time.time() - start_time
                         
-                        # Add to results
+                        # Add to results with timestamp
                         self.results = pd.concat([
                             self.results, 
                             pd.DataFrame([{
@@ -183,7 +200,8 @@ class MultiModelEvaluator:
                                 "model": agent_config.get("llm_options", {}).get("model", "unknown"),
                                 "agent_name": agent_name,
                                 "response": response,
-                                "time_taken": time_taken
+                                "time_taken": time_taken,
+                                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                             }])
                         ], ignore_index=True)
                         
@@ -197,7 +215,7 @@ class MultiModelEvaluator:
                         print(f"Error querying agent {agent_name} with question: {question}")
                         print(f"Error details: {str(e)}")
                         
-                        # Add error to results
+                        # Add error to results with timestamp
                         self.results = pd.concat([
                             self.results, 
                             pd.DataFrame([{
@@ -205,7 +223,8 @@ class MultiModelEvaluator:
                                 "model": agent_config.get("llm_options", {}).get("model", "unknown"),
                                 "agent_name": agent_name,
                                 "response": f"ERROR: {str(e)}",
-                                "time_taken": time.time() - start_time
+                                "time_taken": time.time() - start_time,
+                                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                             }])
                         ], ignore_index=True)
                         
@@ -220,14 +239,28 @@ class MultiModelEvaluator:
         print(f"Evaluation complete. Results saved to {self.output_path}")
     
     def _save_results(self):
-        """Save results to CSV file"""
+        """Save results to CSV file with timestamp"""
         # Restructure the results dataframe to have questions as rows and models as columns
         if not self.results.empty:
             # Create a unique identifier for each model/agent combination
             self.results['model_agent'] = self.results['agent_name'] + ' (' + self.results['model'] + ')'
             
             # Create a pivot table with questions as rows and model/agent as columns
-            pivoted_results = self.results.pivot(
+            # Include timestamps in the pivoted results by using the most recent timestamp for each question-model pair
+            pivoted_df = pd.DataFrame()
+            
+            # Get unique questions
+            unique_questions = self.results['question'].unique()
+            
+            # For each question, find the latest response from each model_agent
+            for question in unique_questions:
+                question_df = self.results[self.results['question'] == question]
+                # Group by model_agent and get the row with the latest timestamp
+                latest_responses = question_df.sort_values('timestamp').groupby('model_agent').last().reset_index()
+                pivoted_df = pd.concat([pivoted_df, latest_responses], ignore_index=True)
+            
+            # Create the final pivoted view
+            pivoted_results = pivoted_df.pivot(
                 index='question',
                 columns='model_agent',
                 values='response'
@@ -238,23 +271,16 @@ class MultiModelEvaluator:
             
             # Save the pivoted results to CSV
             pivoted_results.to_csv(self.output_path, index=False)
-            
-            # Also save as Excel if pandas has openpyxl
-            try:
-                excel_path = os.path.splitext(self.output_path)[0] + ".xlsx"
-                pivoted_results.to_excel(excel_path, index=False)
-                print(f"Results also saved to Excel: {excel_path}")
-            except Exception:
-                pass  # Skip Excel export if not available
+            print(f"Results saved to: {self.output_path}")
             
         else:
             # If results are empty, save an empty dataframe
-            pd.DataFrame(columns=["question"]).to_csv(self.output_path, index=False)
+            pd.DataFrame(columns=["question", "timestamp"]).to_csv(self.output_path, index=False)
 
 def main(
     config: str = typer.Option(..., "--config", help="Path to the YAML configuration file"),
     questions: str = typer.Option(..., "--questions", help="Path to the text file containing questions"),
-    output: Optional[str] = typer.Option(None, "--output", help="Path to save the results (default: results.csv)"),
+    output: Optional[str] = typer.Option(None, "--output", help="Path to save the results (default: test/results_{timestamp}.csv)"),
     env: Optional[str] = typer.Option(None, "--env", help="Path to .env file with API keys")
 ):
     """
