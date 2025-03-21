@@ -123,8 +123,8 @@ services:
       - USER_ID=${USER_ID:-${UID}}
       - GROUP_ID=${GROUP_ID:-${GID}}
     ports:
-      - 7700:7700
-    #cap_add:  # uncomment this section if you experience permissions issues in podman
+      - 7701:7700
+    #cap_add:  # uncomment this section if you experience permissions issues in podman 
     #  - DAC_OVERRIDE
     volumes:
       # Using anonymous volume - use 'USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose up -V' to reset only MeiliSearch DB
