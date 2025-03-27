@@ -29,7 +29,7 @@ services:
       MODELS_DIR: "/app/models.d" # used by chat-ui to get models
 
       AGENT_USE_PROXY: True
-      AGENT_PROXY_ADDRESS: "http://litellm-proxy:4000/v1"
+      AGENT_PROXY_ADDRESS: "http://litellm-proxy-glucosedao:4000/v1"
       SECURITY_API_KEY: "sk-fancy_security_key"
 
       # Environment files
@@ -72,7 +72,7 @@ services:
       - "./agent_tools:/app/agent_tools"
       - "./chat_agent_profiles.yaml:/app/chat_agent_profiles.yaml"
     depends_on:
-      litellm-proxy:
+      litellm-proxy-glucosedao:
         condition: service_started
     restart: on-failure:3
     # command: ["python", "-m", "just_agents.web.run_agent", "run-chat-ui-server-command"]
@@ -125,7 +125,7 @@ services:
       - MEILI_EXPERIMENTAL_ENABLE_VECTORS=true
       - MEILI_EXPERIMENTAL_DUMPESS_UPGRADE=true
     ports:
-      - 7700:7700
+      - 7701:7700
     #cap_add:  # uncomment this section if you experience permissions issues in podman 
     #  - DAC_OVERRIDE
     volumes:
@@ -133,29 +133,30 @@ services:
     restart: unless-stopped
     command: "meilisearch --experimental-dumpless-upgrade"
 
-  litellm-proxy:
-    container_name: litellm-proxy
+  litellm-proxy-glucosedao:
+    container_name: litellm-proxy-glucosedao
     image: ghcr.io/berriai/litellm:main-latest
     command: '--config proxy_server_config.yaml --detailed_debug'
     volumes:
       - "./proxy.yaml:/app/proxy_server_config.yaml"
     ports:
-      - "127.0.0.1:14000:4000" # Map the container port to the host, change the host port if necessary
+      - "127.0.0.1:14001:4000" # Map the container port to the host, change the host port if necessary
     env_file:
       - ./env/.env.keys # Load local .env file
       - ./env/.env.redis # Load local .env file
     depends_on:
-      llm-cache:
+      llm-cache-glucosedao:
         condition: service_started
-  llm-cache:
-    container_name: just-litellm-cache-redis
+
+  llm-cache-glucosedao:
+    container_name: just-litellm-cache-redis-glucosedao
     image: redis:7.4-alpine
     restart: unless-stopped
     command: /bin/sh -c "redis-server --loglevel notice --requirepass $$REDIS_PASSWORD --port $$REDIS_PORT"
     env_file:
        - ./env/.env.redis
     ports:
-      - "127.0.0.1:16379:6379"
+      - "127.0.0.1:26379:6379"
     volumes:
       - redis-data:/bitnami/redis/data
 

@@ -93,7 +93,7 @@ model_list:
 router_settings:
   routing_strategy: usage-based-routing # Literal["simple-shuffle", "least-busy", "usage-based-routing","latency-based-routing"], default="simple-shuffle"
   model_group_alias: {"llama3-8b": "groq-llama3-8b-8192"} # all requests with `gpt-4` will be routed to models with `gpt-3.5-turbo`
-  redis_host: "llm-cache"
+  redis_host: "llm-cache-glucosedao"
   redis_password: os.environ/REDIS_PASSWORD
   redis_port: 6379
 
@@ -106,7 +106,7 @@ litellm_settings:
 
   num_retries: 2 # retry call 3 times on each model_name (e.g. zephyr-beta)
   request_timeout: 120 # raise Timeout error if call takes longer than 10s. Sets litellm.request_timeout
-  fallbacks: [{"groq/llama-3.3-70b-versatile": ["gpt-4o-mini"]}] # fallback to gpt if call fails num_retries
+  fallbacks: [{"llama-3.3-70b-versatile": ["gpt-4o-mini"]}] # fallback to gpt if call fails num_retries
 #  context_window_fallbacks: [{"gpt-4": ["gpt-4-turbo"]}, {"gpt-3.5-turbo": ["gpt-3.5-turbo-16k"]}] # fallback to gpt-3.5-turbo-16k if context window error
 
   cache: true          # set cache responses to True, litellm defaults to using a redis cache
