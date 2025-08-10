@@ -101,7 +101,8 @@ Also check the [notes](#some-notes) section for further information.
 - 📦 Works without Python or Node.js on your system
 
 
-We use [just-agents](https://github.com/longevity-genie/just-agents) library to initialize agents from YAML, so most of the modern models ( DeepSeek Reasoner, ChatGPT, LLAMA3.3, etc.) are supported. 
+We use [just-agents](https://github.com/longevity-genie/just-agents) library to initialize agents from YAML, so most of the modern models ( DeepSeek Reasoner, ChatGPT, LLAMA3.3, etc.) are supported.
+You can check out available models at the moment [here](https://github.com/longevity-genie/just-agents/blob/main/core/just_agents/llm_options.py). 
 However, you might need to add your own keys to the environment variables. We provide a free Groq key by default but it is very rate-limited. We recommend getting your own keys,  [Groq](https://console.groq.com/playground) can be a good place to start as it is free and contains many open-source models.
 
 ## What if I want to use Podman instead of Docker?

@@ -7,6 +7,8 @@ agent_profiles:
     tools:
       - package: "just_agents.tools.agents_locator"
         function: "call_expert_agent"
+      - description: Built-in tool to search the web
+        function: googleSearch 
     llm_options:
     #  api_base: https://api.groq.com/openai/v1
       model: groq/openai/gpt-oss-20b
@@ -31,17 +33,18 @@ agent_profiles:
         title: Glucosedao -future plans
       - prompt: What is the purpose of Glucosedao?
         title: Glucosedao -purpose
-      - prompt: What is the mission of Glucosedao?
-        title: Glucosedao -mission
-      - prompt: What is the goal of Glucosedao?
-        title: Glucosedao -goal
-      - prompt: What is the vision of Glucosedao?
-        title: Glucosedao -vision
+      - prompt: Can you give me a list of diabetic comunities for my region?
+        title: Diabetic Communities
+      - prompt: Can you tell me how much a certain amout of carbs will increase my blood sugar?
+        title: Carbs- how much will it increase my blood sugar?
+      - prompt: Can you tell me which model of insulin pumps the users found to be more user friendly?
+        title: Insulin Pumps -user friendly
     system_prompt: |
       You are a helpful generic AI assistant.
       When you're asked about something you use 'call_expert_agent' tool to call a dedicated agent.
-      Any question asked first goes to 'sugar_genie_original' agent.
+      EVERY question asked first goes to 'sugar_genie_original' agent.
       If question is about GlucoseDao, then the answer will be only from 'sugar_genie_original' agent.
+      If question returns indexed papers, then you should also provide a link to the paper.Use 'googleSearch' tool to find the link or check if the paper has a link provided.
       Else, if the question did not recieve any answer from 'sugar_genie_original' agent, then the answer will be from 'sugar_genie_generic' agent.
       Always specify which part came from generic knowledge and which part came from files. If there are files, specify also names.
 
@@ -50,16 +53,23 @@ agent_profiles:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
     display_name: 🍬 A Blood Sugar Prediction Genie -uses only generic info- 
     hidden: true
-    assistant_index: 20 
+    assistant_index: 20
+    tools:
+      - description: Built-in tool to search the web
+        function: googleSearch 
     llm_options:
-      model: gemini/gemini-2.0-flash
+      model: gemini/gemini-2.5-pro
       temperature: 0.0
     examples: # Sample user queries for reference.
       - prompt: Why are glucose prediction models important?
         title: Glucose Level Prediction
     system_prompt: |
       You are a helpful generic AI assistant.
-      Your task is to answer to best of your knowledge questions regarding diabetic issues or any other generic topics.
+      Your task is to answer to best of your knowledge questions regarding diabetic issues or any other generic topics. Use the tool 'googleSearch' to search the web and provide up to date information.
+      ALWAYS provide the link to the web page you used to answer the question.
+      When you use the tool 'googleSearch', you MUST ALWAYS provide the link to the web page you used to answer the question.
+      When you use the tool 'googleSearch', you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
+
 
 
   sugar_genie_original: # Short agent identifier in snake_case format.
@@ -86,6 +96,10 @@ agent_profiles:
       function: "all_indexes"
     - package: "just_semantic_search.meili.tools"
       function: "search_documents"
+    - description: Built-in tool to search the web
+      function: googleSearch
+    - description: Built-in tool to execute code
+      function: codeExecution
 
     examples: # Sample user queries for reference.
       - prompt: Tell me about GlucoseDAO, its mission, goals, links, founders and how it works.
@@ -95,12 +109,17 @@ agent_profiles:
    
     system_prompt: |
       You are a Glucose Level Prediction Advisor. 
-      When answering any question your first step is to search for relevant documents using the tool 'search_documents' with glucosedao as index. Use 5 as limit Always use this index, do not change it.
+      When answering any question your first step is to search for relevant documents using the tool 'search_documents' with glucosedao as index. Use 5 as limit. ALWAYS use this index, do not change it.
       Put debug argument to True to get more information about the search.
       Always set 'remote_embedding' option to true.
       Do not run the same query twice!
       You MUST ALWAYS provide sources for all your answers. If you summarize from multiple documents, you MUST provide sources for each document that you used in your answer.
       You MUST ALWAYS explicitly explain which part of your answer you took from which document and which part you took from your knowledge.
+      You MUST ALWAYS provide the link to the web page you used to answer the question.
+      If indexed documents do not contain the answer, then you should use 'googleSearch' tool to find the answer but clearly state that you did not find the answer in the documents.
+      If you use 'googleSearch' tool, you MUST ALWAYS provide the link to the web page you used to answer the question.
+      If you use 'googleSearch' tool, you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
+      If indexed documendts contain links, or are list of links you can use them to search the web for more information.
 
   toy_tools_agent:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
@@ -206,3 +225,17 @@ agent_profiles:
                 Make sure to provide the output in the correct format, do not add any other text or comments.
                 For source you either give DOI, pubmed or filename (if doi or pubmed is not available).
                 File filename you give a filename of the file in the folder together with the extension.
+
+                
+  GoogleToolsAgent:
+    class_qualname: just_agents.base_agent.BaseAgentWithLogging
+    llm_options:
+      model: gpt-4.1-nano
+      temperature: 0.0
+      tool_choice: auto
+    system_prompt: Test agent with Google tools
+    tools:
+    - description: Built-in tool to search the web
+      function: googleSearch
+    - description: Built-in tool to execute code
+      function: codeExecution
