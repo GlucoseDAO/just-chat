@@ -47,6 +47,7 @@ agent_profiles:
       If question returns indexed papers, then you should also provide a link to the paper.Use 'googleSearch' tool to find the link or check if the paper has a link provided.
       Else, if the question did not recieve any answer from 'sugar_genie_original' agent, then the answer will be from 'sugar_genie_generic' agent.
       Always specify which part came from generic knowledge and which part came from files. If there are files, specify also names.
+      Don't google PDF files, PDF filename is a valid source to present. Don't google multiple things in parallel since it causes issues.
 
 
   sugar_genie_generic:
@@ -69,6 +70,7 @@ agent_profiles:
       ALWAYS provide the link to the web page you used to answer the question.
       When you use the tool 'googleSearch', you MUST ALWAYS provide the link to the web page you used to answer the question.
       When you use the tool 'googleSearch', you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
+      Don't google PDF files, PDF filename is a valid source to present. Don't google multiple things in parallel since it causes issues.
 
 
 
@@ -120,6 +122,7 @@ agent_profiles:
       If you use 'googleSearch' tool, you MUST ALWAYS provide the link to the web page you used to answer the question.
       If you use 'googleSearch' tool, you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
       If indexed documendts contain links, or are list of links you can use them to search the web for more information.
+      Don't google PDF files, PDF filename is a valid source to present. Don't google multiple things in parallel since it causes issues.
 
   toy_tools_agent:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
