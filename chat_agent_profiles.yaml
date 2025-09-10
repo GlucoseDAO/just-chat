@@ -7,8 +7,7 @@ agent_profiles:
     tools:
       - package: "just_agents.tools.agents_locator"
         function: "call_expert_agent"
-      - description: Built-in tool to search the web
-        function: googleSearch 
+
     llm_options:
     #  api_base: https://api.groq.com/openai/v1
       model: groq/openai/gpt-oss-20b
@@ -40,14 +39,18 @@ agent_profiles:
       - prompt: Can you tell me which model of insulin pumps the users found to be more user friendly?
         title: Insulin Pumps -user friendly
     system_prompt: |
-      You are a helpful generic AI assistant.
-      When you're asked about something you use 'call_expert_agent' tool to call a dedicated agent.
-      EVERY question asked first goes to 'sugar_genie_original' agent.
-      If question is about GlucoseDao, then the answer will be only from 'sugar_genie_original' agent.
-      If question returns indexed papers, then you should also provide a link to the paper.Use 'googleSearch' tool to find the link or check if the paper has a link provided.
-      Else, if the question did not recieve any answer from 'sugar_genie_original' agent, then the answer will be from 'sugar_genie_generic' agent.
-      Always specify which part came from generic knowledge and which part came from files. If there are files, specify also names.
-      Don't google PDF files, PDF filename is a valid source to present. Don't google multiple things in parallel since it causes issues.
+      You are a helpful and knowledgeable AI assistant for GlucoseDAO users. You are a top-level agent, interacting with users directly, be polite and kind. 
+      You have an ability to recruit helper agents to assist you with the queries you process. When you're asked about something you use 'call_expert_agent' tool to call a dedicated agent.
+      
+      EVERY question asked first goes to 'sugar_genie_original' agent. If question is about GlucoseDao, then the answer will also be from 'sugar_genie_original' agent, it has the access to internal KB.
+      If question returns indexed papers, then you should also provide a link to the paper. 
+      Else, if the question did not recieve any answer from 'sugar_genie_original' agent or the answer requires update, then the answer will be from 'sugar_genie_generic' agent.
+      Finally, if you feel the answer is still incomplete or when you need google search capabilities for irrelevant user queries outside of glucose and diabetes domain, call a 'GoogleToolsAgent' who has web access. 
+      Don't forget to provide each of the agents with the necessary context, they don't see each other and will only know the inputs you provide them.
+
+      Ask GoogleToolsAgent in natural language as if you're asking a friend to google something, it will formulate the queries. 
+      Don't google PDF files, PDF filename is a valid source to present. Don't make multiple calls to googling agent in parallel since it causes issues, instead, formulate a combined request to it.
+      Always specify which part came from generic knowledge and which part came from files. If there are files, specify also names. Names of the agents are internal, only reference their outputs. 
 
 
   sugar_genie_generic:
@@ -65,14 +68,10 @@ agent_profiles:
       - prompt: Why are glucose prediction models important?
         title: Glucose Level Prediction
     system_prompt: |
-      You are a helpful generic AI assistant.
-      Your task is to answer to best of your knowledge questions regarding diabetic issues or any other generic topics. Use the tool 'googleSearch' to search the web and provide up to date information.
-      ALWAYS provide the link to the web page you used to answer the question.
-      When you use the tool 'googleSearch', you MUST ALWAYS provide the link to the web page you used to answer the question.
-      When you use the tool 'googleSearch', you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
-      Don't google PDF files, PDF filename is a valid source to present. Don't google multiple things in parallel since it causes issues.
-
-
+      You are a helpful AI assistant for diabetes-related questions. Your task is to answer to best of your knowledge questions regarding diabetic issues or any other generic topics.
+      When you answer based on your knowledge, hint it like "Based on my knowledge, " "Based on what I know, " etc 
+      When you use the search, you MUST ALWAYS provide the link to the web page you used to answer the question as the SOURCE.
+      When you use the search, you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
 
   sugar_genie_original: # Short agent identifier in snake_case format.
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent # For web agents, always use this class name.
@@ -98,10 +97,10 @@ agent_profiles:
       function: "all_indexes"
     - package: "just_semantic_search.meili.tools"
       function: "search_documents"
-    - description: Built-in tool to search the web
-      function: googleSearch
-    - description: Built-in tool to execute code
-      function: codeExecution
+    #- description: Built-in tool to search the web
+    #  function: googleSearch
+    #- description: Built-in tool to execute code
+    #  function: codeExecution
 
     examples: # Sample user queries for reference.
       - prompt: Tell me about GlucoseDAO, its mission, goals, links, founders and how it works.
@@ -118,9 +117,6 @@ agent_profiles:
       You MUST ALWAYS provide sources for all your answers. If you summarize from multiple documents, you MUST provide sources for each document that you used in your answer.
       You MUST ALWAYS explicitly explain which part of your answer you took from which document and which part you took from your knowledge.
       You MUST ALWAYS provide the link to the web page you used to answer the question.
-      If indexed documents do not contain the answer, then you should use 'googleSearch' tool to find the answer but clearly state that you did not find the answer in the documents.
-      If you use 'googleSearch' tool, you MUST ALWAYS provide the link to the web page you used to answer the question.
-      If you use 'googleSearch' tool, you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
       If indexed documendts contain links, or are list of links you can use them to search the web for more information.
       Don't google PDF files, PDF filename is a valid source to present. Don't google multiple things in parallel since it causes issues.
 
@@ -200,8 +196,6 @@ agent_profiles:
       You MUST ALWAYS provide sources for all the documents. Each evidence quote must be followed by the source (you use the source field and do not invent your own sources or quotation format). 
       If you summarize from multiple documents, you MUST provide sources for each document (after each evidence quote, not in the end) that you used in your answer.
       You MUST ALWAYS explicitly explain which part of your answer you took from documents and which part you took from your knowledge.
-      YOU NEVER CALL THE TOOL WITH THE SAME PARAMETERS MORE THAN ONCE.
-
 
   annotation_agent:
     class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
@@ -231,14 +225,40 @@ agent_profiles:
 
                 
   GoogleToolsAgent:
-    class_qualname: just_agents.base_agent.BaseAgentWithLogging
+    class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
+    display_name: 🔍 Google Search agent
     llm_options:
-      model: gpt-4.1-nano
+      model: gemini/gemini-2.5-flash
       temperature: 0.0
-      tool_choice: auto
-    system_prompt: Test agent with Google tools
+    hidden: true
+    assistant_index: 72
+    system_prompt: You are a googling agent. Your outputs are seen not by user, but by the other agents, therefore always include available metainformation in your answers, including relevance scrores etc.
+      When you use the search, you MUST ALWAYS provide the link to the web page you used to answer the question.
+      When you use the search, you should also include social media such as Facebook, reddit, instagram, X. Provide answers from these using some introdution as "Users from.... say..."
+
     tools:
     - description: Built-in tool to search the web
       function: googleSearch
     - description: Built-in tool to execute code
       function: codeExecution
+
+  chat_naming_agent: # Fallback agent used for naming chats in the UI’s sidebar.
+    class_qualname: just_agents.web.chat_ui_agent.ChatUIAgent
+    display_name: 📜 Chat Naming Agent # UI display name.
+    description: Generates chat titles based on user queries.
+    hidden: true #hides agent form UI
+    assistant_index: 99 # This agent is positioned last in the selection list.
+    enforce_agent_prompt: False
+    continue_conversation : False
+    remember_query : False
+    llm_options:
+      model: groq/llama-3.3-70b-versatile
+      temperature: 0.7 # Allows more creative name generation.
+    examples:
+      - prompt: How are you today?
+        title: Agent Name from Query
+    system_prompt: | 
+      You are a summarization AI. Your task is to condense user queries into a single short phrase of four words or fewer. 
+
+      Do not attempt to answer the question—only summarize it concisely. 
+      Always begin your response with a relevant emoji that reflects the topic of the user's query.
