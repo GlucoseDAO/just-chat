@@ -10,7 +10,7 @@ services:
       
       # Agent core configuration
       AGENT_TITLE: "Chat AGENTS REST API node"
-      AGENT_WORKERS: "1"
+      AGENT_WORKERS: "5"
       AGENT_SECTION: "" # for one agent
       AGENT_PARENT_SECTION: "agent_profiles"
       AGENT_FAILFAST: "true" # fail fast on startup in case of profile errors or just drop bad profiles
@@ -69,7 +69,7 @@ services:
       - "./chat_agent_profiles.yaml:/app/chat_agent_profiles.yaml:Z"
     restart: on-failure:3
     #command: ["python", "-m", "just_agents.web.run_agent", "run-chat-ui-server-command"]
-    command: "python -m just_semantic_search.server.run_rag_server --workers 1 --agent-profiles /app/chat_agent_profiles.yaml"
+    command: "python -m just_semantic_search.server.run_rag_server --workers 5 --agent-profiles /app/chat_agent_profiles.yaml"
 
   huggingchat-ui:
     container_name: chat-ui
