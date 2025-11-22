@@ -98,8 +98,8 @@ services:
     ports:
       - "27017"
     volumes:
-      - "mongo-data:/data/db"
-    #  - "./volumes/mongo/db:/data/db"
+      - "mongo-data-glucosedao:/data/db"
+
     depends_on:
       just-chat-agents:
         condition: service_healthy
@@ -128,14 +128,14 @@ services:
     #  - DAC_OVERRIDE
     volumes:
       # Using anonymous volume - use 'USER_ID=$(id -u) GROUP_ID=$(id -g) docker compose up -V' to reset only MeiliSearch DB
-      - meili-data:/data.ms
+      - meili-data-glucosedao:/data.ms
       - "./dumps:/dumps:z"
     restart: unless-stopped
     command: "meilisearch --import-dump /dumps/just_chat_rag.dump"
 
 volumes:
-  mongo-data:
-  meili-data:
+  mongo-data-glucosedao:
+  meili-data-glucosedao:
 
 networks:
   default:
